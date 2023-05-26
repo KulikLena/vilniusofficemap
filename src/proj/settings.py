@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-ww81dmr99wv)hfk3f-lo3!&fj2x+!mm_nxw&+9hi+4xe+!$9vr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['colliers.pythonanywhere.com','127.0.0.1', 'https://mc.yandex.ru/metrika/tag.js']
+ALLOWED_HOSTS = ['vilnius-colliers.pythonanywhere.com','colliers.pythonanywhere.com','127.0.0.1', 'https://mc.yandex.ru/metrika/tag.js']
 
 
 # Application definition

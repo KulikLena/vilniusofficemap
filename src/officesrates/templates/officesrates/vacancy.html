@@ -369,7 +369,7 @@
             var locations = officeData.features.map(function(rat) {
                 // the heatmap plugin wants an array of each location
                 var location = rat.geometry.coordinates.reverse();
-                var radius_VACANCY = parseInt(Math.sqrt(rat.properties.GLA/100))
+                var radius_VACANCY = parseInt(Math.sqrt(rat.properties.GLA/200))
                 location.push(radius_VACANCY);
                 return radius_VACANCY, location; // e.g. [50.5, 30.5, 0.2], // lat, lng, intensity
               });

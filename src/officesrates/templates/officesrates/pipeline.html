@@ -211,7 +211,7 @@
 
                     // return radius and color 
                     style: function(feature) {
-                        var radius_gla = parseInt(Math.sqrt(feature.properties.GLA/100));
+                        var radius_gla = parseInt(Math.sqrt(feature.properties.GLA/200));
                         return feature.properties.TYPE == 'Existing' ? {color:'#25408F', radius: radius_gla} :
                                 feature.properties.TYPE == 'Pipeline' ? {color:'#0C9ED9', radius: radius_gla}:
                                 feature.properties.TYPE == 'Completed in 2023' ? {color:'#ED1B34', radius: radius_gla} :
