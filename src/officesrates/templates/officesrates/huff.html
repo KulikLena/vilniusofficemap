@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>Vilnius Huff</title>
+	{% load static %}
+
+	<meta charset="utf-8" />	
+    <link rel="stylesheet" href="{% static "leaflet.css" %}"> 
+        <link rel="stylesheet" href="{% static "css\bootstrap.css" %}">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+        <script src= "{% static "leaflet-src.js"  %}"></script> 
+        <script src="{% static "jquery-3.2.0.min.js" %}"></script> 
+        <script src="{% static "leaflet-heat.js" %}"></script>
+		<script src="{% static "turf.min.js" %}"></script>
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#map {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+
+	<script type="text/javascript" src="{% static "vilnius.geojson"%}"></script>
+	
+	<script type="text/javascript" src="{% static "retaildata.js"%}"></script>
+	<script type="text/javascript" src="{% static "vilnius_residential_land.geojson"%}"></script>
+
+	
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+	var map = L.map('map', {zoomSnap: 0.1}).setView([54.679413394326424, 25.286324045718565], 12.5);
+
+	var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/lenakulik/cl4gubhle000114qtkjq2kz8f/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibGVuYWt1bGlrIiwiYSI6ImNranVqYnhxMDAzZHgyc2xncTI2ZTJlaWIifQ.__lIWTKzeHrjT0FABCVsjw', {
+		maxZoom: 19,
+		attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
+	}).addTo(map);
+
+	// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}', {foo: 'bar', attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'}).addTo(map);
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
+	// draw hexgrid
+	var bbox = turf.bbox(data1);
+	var cellSide = 0.1;
+	var options = {mask: data1.features[0]};
+	var hexgrid = turf.hexGrid(bbox, cellSide, options);
+		
+	// calculate distances from hexes to malls
+	hexgrid.features.forEach((hex, i) => {
+		// calculate center of hex 
+		var center = turf.center(hex)
+		var obj = {}
+		var sum = 0
+		
+		malls.features.forEach((mall, j) => {
+			var distance = turf.distance([center.geometry.coordinates[1], center.geometry.coordinates[0]], [mall.geometry.coordinates[1], mall.geometry.coordinates[0]])
+			var attr = malls.features[j].properties.area / (distance*distance)
+			obj[mall.properties.Name] = attr
+			sum += attr
+		})	
+		hex.properties.prob = obj['MADA'] / sum
+		 console.log(hexgrid.features[i].properties.prob)
+
+		// add hexgrid to the map
+		//var hexgridLyr = L.geoJSON(hex, {style:style}).addTo(map);
+		for (var i = 0; i < residential.features.length; i++){
+			if (turf.intersect(hex, residential.features[i])){
+				var hexgridLyr = L.geoJSON(hex, {style:style}).addTo(map);
+				break
+			}	
+		}
+	})
+	
+	//create color ramp
+	function getColor(y) {
+	    return y < 0.1 ? '#5e4fa2' :
+	           y < 0.2 ? '#3288bd' :
+	           y < 0.3 ? '#66c2a5' :
+	           y < 0.4 ? '#abdda4' :
+	           y < 0.5 ? '#e6f598' :
+	           y < 0.6 ? '#fee08b' :
+	           y < 0.7 ? '#fdae61' :
+	           y < 0.8 ? '#f46d43' :
+	           y < 0.9 ? '#d53e4f' :
+	           y < 1 ? '#9e0142' :
+	                      'black';
+	}
+
+	//create style, with fillColor picked from color ramp
+	function style(feature) {
+		return {
+			fillColor: getColor(feature.properties.prob),
+	    	color: "#A2AEBB",
+	    	weight: 0.5,
+	    	opacity:0.5,
+	    	fillOpacity: 0.3
+		};
+	}
+
+
+
+	// add boundaries of homel
+	var boundariesLayer = L.geoJSON(data1, {
+		style:{color: '#414361', fillOpacity: 0, weight:5}
+	}).addTo(map);
+	
+	// add malls to the map
+	var mallIcon = L.icon({
+		iconUrl: 'sc.png',
+		iconSize: [30, 30],
+		iconAnchor: [15, 30]	
+	});
+
+	var mallLayer =  L.geoJSON(malls, {
+		pointToLayer: function (feature, latlng) {
+			return L.marker(latlng, );
+		}, style:{color: '#414361', fillOpacity: 0, weight:5}
+	}).addTo(map);
+
+
+</script>
+
+
+
+</body>
+</html>

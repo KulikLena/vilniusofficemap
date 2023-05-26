@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+        <title>Vilnius offices</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static "leaflet.css" %}"> 
+        <link rel="stylesheet" href="{% static "css\leaflet-sidebar.css" %}"> 
+        <link rel="stylesheet" href="{% static "leaflet.reachability.css" %}"> 
+        <link rel="stylesheet" href="{% static "css\bootstrap.css" %}">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+        <script src= "{% static "leaflet-src.js"  %}"></script> 
+        <script type="{% static "text/javascript" src="https://unpkg.com/default-passive-events"%}"></script>
+        <script src="{% static "leaflet.ajax.min.js" %}"></script>
+        <script src="{% static "jquery-3.2.0.min.js" %}"></script> 
+        <script src="{% static "leaflet.reachability.js" %}"></script>
+        <script src="{% static "leaflet-heat.js" %}"></script>
+        <script src="{% static "leaflet.minichart.min.js" %}"></script>
+        <script src="{% static "leaflet.minichart.js" %}"></script>
+        <script src="{% static "leaflet-sidebar.js" %}"></script>
+        
+        <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: Verdana, sans-serif;
+            }
+            .leaflet-container {
+                height: 400px;
+                width: 600px;
+                max-width: 100%;
+                max-height: 100%;
+                font-family: 'Verdana';
+            }
+        </style>
+    
+        <style>#map { position: absolute; right: 0; top:0; height: 100vh; width:300vh }
+            .info { padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
+            .legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
+            .popupCustom .leaflet-popup-tip,
+            .leaflet-sidebar {overflow-y: auto; text-indent: 10px; draggable: true; closeButton: true; autopah: true; width: 220px; color: #777;1 padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .leaflet-sidebar-tabs {overflow-y: auto; text-indent: 10px; width: 220px; color: #777;1 padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .sidebar-content {overflow-y: auto; width: 200px; color: #777;1 padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .leaflet-control-layers-list {overflow-y: auto; color: #777;1 padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .fa fa-bars {text-indent: 5px;  margin-left: 10px; width: 220px; margin-top: 0.5em ;margin-bottom: 0.5em ;}
+            .leaflet-popup-content {line-height:100%; }
+            .leaflet-control-layers-selector { color: #777; padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .popupCustom .leaflet-popup-content-wrapper  { width: 200px; line-height:100%; padding: 6px 8px; background: white; color: #234c5e;font: 12px/14px Verdana, Verdana, Verdana;box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px; }
+            .leaflet-bar { position: relative; float:left; padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; width: 300} 
+            .leaflet-sidebar-header {width: 240px; background-color: #244090; text-align: justify}
+            .fa-caret-left {content: url('/static/200601.png'); width: 25px; margin-top: 12px;}
+            .btn-primary {background-color: #244090 !important; font: 12px/14px Verdana, Verdana, Verdana !important; text-align: left}
+            .leaflet-sidebar-close {position: relative; float:right;}
+            .leaflet-sidebar-close-right {position: relative; float:left;}
+            .contentPanel { width:200px; padding: 6px 8px; font: 12px/14px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; width: 300 } 
+            .img:hover { transform: scale(2.0);}
+        </style>
+</head>
+<body>
+    <div id="sidebar" class="leaflet-sidebar">   
+        <div id="divFilter" class="leaflet-sidebar-tabs">
+            <h1 class="leaflet-sidebar-header">
+                <span class="leaflet-sidebar-close" > 
+                    <i id ="close" class="fa fa-caret-left"  onclick="closeNav()"></i>
+                </span>
+                Фильтры
+            </h1>
+            <h4> <b> Types </b> </h4> 
+            <h6>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltType' value='ALL' checked> All
+            </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltType' value='Existing'> Existing
+                </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltType' value='Pipeline'> Pipeline
+            </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltType' value='Completed in 2023'> Completed in 2023
+            </div>
+              <h4> <br> </h4>
+            </h6>
+            <h4> <b> Rent Rates </b> </h4> 
+            <h4>
+            <div >
+                            <a href="/map/" target="_parent"><button type="button" class="btn btn-primary">Rent Rates</button></a>
+            </div>
+            <h4> <br> </h4>
+            </h4>
+            <h4> <b> Vacancy </b> </h4> 
+            <h4>
+            <div >
+                <a href="/vacancy/" target="_parent"><button type="button" class="btn btn-primary">Show vacancy</button></a>
+            </div>         
+            </h4>
+            <span class="leaflet-sidebar-close-right"  > 
+                <i id ="close" class="fa fa-caret-left" float= "left" onclick="closeNav()"></i>
+            </span>
+
+        </div>
+    </div>
+
+        <div id="map" class = "sidebar-map leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"></div>
+        <script type="text/javascript" src="{% static "office-Vilnius.js"%}"></script>
+        <script type="text/javascript">
+
+            var map = L.map('map').setView([54.678458872500464, 25.288739265832806], 12);
+                var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/lenakulik/cl4gubhle000114qtkjq2kz8f/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibGVuYWt1bGlrIiwiYSI6ImNranVqYnhxMDAzZHgyc2xncTI2ZTJlaWIifQ.__lIWTKzeHrjT0FABCVsjw', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
+            }).addTo(map);
+            
+            var googleHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=m@221097413,traffic&x={x}&y={y}&z={z}', {
+				subdomains: '0123',
+				attribution: '&copy; Google Maps',
+				zIndex: 4
+			});
+        
+            // control that shows state info on hover
+            var info = L.control();
+        
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            //dynamic pointer
+
+            info.update = function (props) {
+                this._div.innerHTML = '<h4> Rent Rates'+ '<br>' +'in Vilnius Offices</h4>'+
+                '<br> <a href="https://www.colliers.com/en-lt/"><img src="{% static 'colliers.png' %}" width=100 ></a><br />' 
+                + (props ? '<b><br>' + props.name + '</b><br />' + props.ADDRESS +'</b><br>'+ '</b>': '' );
+            };
+        
+            info.addTo(map);
+           
+                var geojsonMarkerOptions  = {
+                    radius: 12,
+                    color: "#000",
+                    weight: 1,
+                    opacity: 0.8,
+                    fillOpacity: 0.8
+                };
+ 
+                var customOptions = {
+                    'maxWidth': '400',
+                    'width': '200',
+                    'line-height':'0.5',
+                    'className' : 'popupCustom' }
+                
+ // cbd polygons
+
+ var cbd = L.geoJSON.ajax('{% static "cbd.geojson"%}', {
+    pointToLayer: function (feature, latlngs) {
+        return L.polygon(latlngs, {color: 'red',fillOpacity: 0.2});
+    }, 
+    onEachFeature: function (feature, layer) {
+        anchors_url1 = "/static/images/"+feature.properties.anchors[0];
+        anchors_url2 = "/static/images/"+feature.properties.anchors[1];
+        anchors_url3 = "/static/images/"+feature.properties.anchors[2];   
+        //img_url = "/static/images/"+feature.properties.Img
+        layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Office stock:</b> <br> '+feature.properties.stock +' thousands sqm'+ ' </h6>'+
+        '<h6><b>A: </b>'+feature.properties.A+'</h6><h6>'+ 	' </h6>'+
+        '<h6><b>B: </b>'+feature.properties.B+'</h6><h6>'+
+            '<h6><b>Tenants: </b>'+ '</h6><h6>'+
+                "<img src="+anchors_url1+" width=40 class='img'>"+ " " +
+                "<img src="+anchors_url2+" width=40 class='img'>"+ " " +
+                "<img src="+anchors_url3+" width=40 class='img'>"+'</h6><h6>'+ 
+        '<a href="tel:+375293768637">Call a broker: <br> +375-29-376-86-37 </a>'+'</h6><h6>'+'<a href="https://colliersoffice.by/"> Find an office </a></h6>'), customOptions);
+        layer.on({
+        mouseover: highlightFeature,
+        //mouseout: resetHighlight,
+        })
+    }, 
+
+    // return  color 
+    style: function(feature) {
+        return parseFloat(feature.properties.RENT_RATE) > 22 ? {color:'#182B62'} :
+        parseFloat(feature.properties.RENT_RATE) > 20  ? {color:'#9F5F9F'}:
+        parseFloat(feature.properties.RENT_RATE) > 18  ? {color:'#ED1B34'} :
+        parseFloat(feature.properties.RENT_RATE) > 16  ? {color:'#F68B1F'} :
+        parseFloat(feature.properties.RENT_RATE) > 14  ? {color:'#FFD400'} :
+        parseFloat(feature.properties.RENT_RATE) > 12  ? {color:'#25408F'} :
+        parseFloat(feature.properties.RENT_RATE) > 10  ? {color:'#339088'} :
+        parseFloat(feature.properties.RENT_RATE) > 8   ? {color:'#0C9ED9'} : 
+        parseFloat(feature.properties.RENT_RATE) > 1   ? {color:'#B7E4F4'} : 
+        parseFloat(feature.properties.RENT_RATE) == 1   ? {color:'#244090', fillOpacity:0, weight:2} : 
+        {color:'25408F' };
+    },
+    
+}).addTo(map).bringToBack();                 
+
+// ajax geojson for working filters 
+
+                var geojson = L.geoJSON.ajax('{% static "office-Vilnius.geojson"%}', {
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, geojsonMarkerOptions);
+                    }, 
+                    filter:filterOfficeByType, 
+                    onEachFeature: function (feature, layer) {
+                        //img_url = "/static/images/"+feature.properties.Img
+                        layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Address:</b> <br> '+feature.properties.ADDRESS +' </h6>'+
+                        '<h6><b>Status: </b>'+feature.properties.TYPE+'</h6><h6>'+ 	
+                        '<a href="tel:+370000000">Call a broker: <br> +370-00-000-00-00 </a>'+'</h6><h6>'+'<a href="https://www.colliers.com/en-lt"> Find an office </a></h6>'), customOptions);
+                        layer.on({
+                        mouseover: highlightFeature,
+                        mouseout: resetHighlight,
+                        })
+                    }, 
+
+                    // return radius and color 
+                    style: function(feature) {
+                        var radius_gla = parseInt(Math.sqrt(feature.properties.GLA/100));
+                        return feature.properties.TYPE == 'Existing' ? {color:'#25408F', radius: radius_gla} :
+                                feature.properties.TYPE == 'Pipeline' ? {color:'#0C9ED9', radius: radius_gla}:
+                                feature.properties.TYPE == 'Completed in 2023' ? {color:'#ED1B34', radius: radius_gla} :
+                                {color:'#FFD400', radius: radius_gla};
+                    },
+                    
+                }).addTo(map).bringToFront();
+
+       
+            function highlightFeature(e) {
+                var layer = e.target;
+                info.update(layer.feature.properties);
+            }
+                  
+            function resetHighlight(e) {
+                geojson.resetStyle(e.target);
+                info.update();
+            }
+            // filers on type
+            $("input[name=fltType]").click(function(){
+                officeIDs=[];
+                geojson.refresh();
+            });
+
+            function filterOfficeByType(json) {
+                var att=json.properties;
+                var optFilter = $("input[name=fltType]:checked").val();
+                if (optFilter=='ALL') {
+                    return true;
+                } else {
+                    return ((att.TYPE==optFilter)||(optFilter=='ALL')) 
+                     
+                }
+            }
+             
+                var popup = L.popup();
+            
+       // Плотность офисной недвижимости
+       
+            var locations = officeData.features.map(function(rat) {
+                // the heatmap plugin wants an array of each location
+                var location = rat.geometry.coordinates.reverse();
+                var radius_gla = parseInt(Math.sqrt(rat.properties.GLA/100))
+                location.push(radius_gla);
+                return radius_gla, location; // e.g. [50.5, 30.5, 0.2], // lat, lng, intensity
+              });
+
+           var heat = L.heatLayer(locations, { minOpacity: 0.9, max: 0.45, maxZoom: 20, radius: location.radius_gla, blur: 10, gradient: {0.4: '#ab809d', 0.85: '#c24e9d', 1: '#f00c9c'}, 
+         });
+             
+        
+        // disclamer 
+
+            map.attributionControl.addAttribution('Rent Rates; <a href="https://www.colliers.com/en-lt">Colliers</a>');
+       
+        // legend
+        var legend = L.control({position: 'bottomright', title: "Категории"});
+        
+        legend.onAdd = function (map) {
+        
+                var div = L.DomUtil.create('div', 'info legend');
+                var grades = ['Existing','Pipeline', 'Completed in 2023'];
+                var colors = ['#25408F','#0C9ED9','#ED1B34'];
+                var labels = ['<strong> Legend </strong> <br>'];
+                        
+                for (var i = 0; i < grades.length; i++) {
+      
+                    labels.push(
+                        '<i style="background: ' + colors[i] + '"></i> ' +
+                        grades[i]+'<br>');
+                }
+        
+                div.innerHTML = labels.join('<br>');
+                return div;
+            };
+        
+        legend.addTo(map);
+        // layers    
+        var baseLayers = {
+            "OpenStreetMap": tiles,
+            "Google Maps": googleHybrid,
+                };
+            
+            var overlays = {
+                "Плотность офисного стока": heat,
+                };
+            
+            L.control.layers(baseLayers, overlays).addTo(map);
+
+           
+            function closeNav() { 
+                if (document.getElementById("sidebar").style.zoom == "0.7") {
+                        document.getElementById("sidebar").style.width = "200px"
+                        document.getElementById("sidebar").style.zoom = "1.0"
+                        document.getElementById("close").style.content = "url('/static/200601.png')"
+                        } else {
+                            document.getElementById("sidebar").style.width = "50px"
+                            document.getElementById("sidebar").style.zoom = "0.7"
+                           // document.getElementById("divFilter").style.visibility = "hidden";
+                            document.getElementById("close").style.content = "url('/static/200602.png')"
+                        }
+                                      
+            };
+      
+        </script>
+    </body>
+</html>
+
+

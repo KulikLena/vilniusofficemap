@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+   
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <title>Vilnius offices VACANCY</title>
+        {% load static %}
+        
+        <link rel="stylesheet" href="{% static "leaflet.css" %}"> 
+        <link rel="stylesheet" href="{% static "css\leaflet-sidebar.css" %}"> 
+        <link rel="stylesheet" href="{% static "leaflet.reachability.css" %}"> 
+        <link rel="stylesheet" href="{% static "css\bootstrap.css" %}">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+        <script src= "{% static "leaflet-src.js"  %}"></script> 
+        <script type="{% static "text/javascript" src="https://unpkg.com/default-passive-events"%}"></script>
+        <script src="{% static "leaflet.ajax.min.js" %}"></script>
+        <script src="{% static "jquery-3.2.0.min.js" %}"></script> 
+        <script src="{% static "leaflet.reachability.js" %}"></script>
+        <script src="{% static "leaflet-heat.js" %}"></script>
+        <script src="{% static "leaflet-sidebar.js" %}"></script>
+        <script src="{% static "leaflet.minichart.min.js" %}"></script>
+        <script src="{% static "leaflet.minichart.js" %}"></script>
+        
+        <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+                font-family: Verdana, sans-serif;
+            }
+            .leaflet-container {
+                height: 400px;
+                width: 600px;
+                max-width: 100%;
+                max-height: 100%;
+                font-family: 'Verdana';
+            }
+        </style>
+    
+        <style>#map { position: absolute; right: 0; top:0; height: 100vh; width:300vh }
+            .info { padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
+            .legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
+            .popupCustom .leaflet-popup-tip,
+            .leaflet-sidebar {overflow-y: auto;text-indent: 10px; draggable: true; closeButton: true; autopah: true; width: 220px; color: #777;1 padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .leaflet-sidebar-tabs {overflow-y: auto;text-indent: 10px; width: 220px; color: #777;1 padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .sidebar-content {overflow-y: auto;width: 200px; color: #777;1 padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .leaflet-control-layers-list {coverflow-y: auto;olor: #777;1 padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .fa fa-bars {text-indent: 5px;  margin-left: 10px; width: 200px; margin-top: 0.5em ;margin-bottom: 0.5em ;}
+            .leaflet-popup-content {line-height:100%; }
+            .leaflet-control-layers-selector { color: #777; padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+            .popupCustom .leaflet-popup-content-wrapper  { width: 200px; line-height:100%; padding: 6px 8px; background: white; color: #234c5e;font: 12px/14px Verdana, Verdana, Verdana;box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px; }
+            .leaflet-bar { position: relative; float:left; padding: 6px 8px; font: 14px/16px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; width: 300} 
+            .leaflet-sidebar-header {width: 240px; background-color: #25408F; text-align: justify}
+            .fa-caret-left {content: url('/static/200601.png'); width: 25px; margin-top: 12px;}
+            .leaflet-sidebar-close {position: relative; float:right;}
+            .leaflet-sidebar-close-right {position: relative; float:left;}
+            .btn-primary {background-color: #25408F !important; font: 12px/14px Verdana, Verdana, Verdana !important}
+            .leaflet-sidebar-close {position: relative; float:right;font: 12px/14px Verdana, Verdana, Verdana;}
+            .contentPanel { width:200px; padding: 6px 8px; font: 12px/14px Verdana, Verdana, Verdana; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; width: 300 } 
+            .img:hover { transform: scale(3.0);}
+        </style>
+</head>
+<body>
+    <div id="sidebar" class="leaflet-sidebar">   
+        <div id="divFilterType" class="leaflet-sidebar-tabs">
+            <h1 class="leaflet-sidebar-header">
+                <span class="leaflet-sidebar-close" > 
+                    <i id ="close" class="fa fa-caret-left"  onclick="closeNav()"></i>
+                </span>
+                Фильтры
+            </h1>
+            <h4> <b> Категория  </b> </h4> 
+            <h6>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltType' value='ALL' checked> All
+            </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltType' value='Existing'> Existing
+                </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltType' value='Pipeline'> Pipeline
+            </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltType' value='Completed in 2023'> Completed in 2023
+            </div>
+            </h6>
+                <h4> <b> Rent rates, EUR/sqm </b><br> </h4> 
+            <h6>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent' name='fltRent' value='ALL' checked> All
+                </div>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent'value="1" > No data
+                </div>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent' value="8"  > under 8
+                    </div>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent' value='10.0'> 8-10
+                </div>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent' value='12.0'> 10 - 12
+                </div>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent' value='14.0'> 12-14
+                </div>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent' value='16.0'> 14-16
+                </div>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent' value='18.0'> 16-18
+                </div>
+                <div class="fa fa-bars">
+                    <input type='radio' name='fltRent' value='20.0'> More than 18
+                </div>
+            </h6>
+            <h4> <b> Vacant, sqm </b></h4> 
+            <h6>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltVACANCY' value='ALL' checked> ALL
+            </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltVACANCY' value='100'> above 100
+            </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltVACANCY' value='500'> above 500
+            </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltVACANCY' value='1000'> above 1000
+            </div>
+            <div class="fa fa-bars">
+                <input type='radio' name='fltVACANCY' value='3000'> above 3000
+            </div>
+            </h6>
+            <h4>
+            <h4> <b> Rent Rates </b> </h4> 
+                <h4>
+                <div >
+                    <a href="/map/" target="_parent"><button type="button" class="btn btn-primary">Rent Rates</button></a>
+                </div>
+            </h4>
+            <h4>
+            </h4>
+            <h4>
+                <div >
+                    <a href="/pipeline/" target="_parent"><button type="button" class="btn btn-primary">Back to the home page</button></a>
+                </div>
+                </h4>
+            <span class="leaflet-sidebar-close-right"  > 
+                <i id ="close" class="fa fa-caret-left" float= "left" onclick="closeNav()"></i>
+            </span>
+
+        </div>
+    </div>
+
+        <div id="map" class = "sidebar-map leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"></div>
+        <script type="text/javascript" src="{% static "office-Minsk.js"%}"></script>
+        <script type="text/javascript">
+
+            var map = L.map('map').setView([54.678458872500464, 25.288739265832806], 12);
+            L.control.sidebar({ autopan: true });
+            var center = [54.678458872500464, 25.288739265832806];
+        
+            var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/lenakulik/cl4gubhle000114qtkjq2kz8f/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibGVuYWt1bGlrIiwiYSI6ImNranVqYnhxMDAzZHgyc2xncTI2ZTJlaWIifQ.__lIWTKzeHrjT0FABCVsjw', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
+            }).addTo(map);
+
+            var googleHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=m@221097413,traffic&x={x}&y={y}&z={z}', {
+				subdomains: '0123',
+				attribution: '&copy; Google Maps',
+				zIndex: 4
+			}); 
+      
+      
+            // control that shows state info on hover
+            var info = L.control();
+        
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+
+            // ads
+                    var info1 = L.control();
+        
+                    info1.onAdd = function (map) {
+                        this._div = L.DomUtil.create('div', 'info');
+                        this.update();
+                        return this._div;
+                       };
+            //dynamic pointer
+
+            info.update = function (props) {
+                this._div.innerHTML = '<h4> Rent Rates'+ '<br>' +'in Vilnius Offices</h4>'+
+                '<br> <a href="https://www.colliers.com/en-lt/"><img src="{% static 'colliers.png' %}" width=100 ></a><br />' 
+                + (props ? '<b><br>' + props.name + '</b><br />' + props.ADDRESS +'</b><br>'+ '</b>': '' );
+            };
+        
+                    info.addTo(map);
+
+            // options for popup
+                var customOptions = {
+                    'maxWidth': '400',
+                    'width': '200',
+                    'line-height':'0.5',
+                    'className' : 'popupCustom' }
+                
+                    var cbd = L.geoJSON.ajax('{% static "cbd.geojson"%}', {
+                        pointToLayer: function (feature, latlngs) {
+                            return L.polygon(latlngs, {color: 'red',fillOpacity: 0.2});
+                        }, 
+                        onEachFeature: function (feature, layer) {
+                            anchors_url1 = "/static/images/"+feature.properties.anchors[0];
+                            anchors_url2 = "/static/images/"+feature.properties.anchors[1];
+                            anchors_url3 = "/static/images/"+feature.properties.anchors[2];   
+                            //img_url = "/static/images/"+feature.properties.Img
+                            layer.bindPopup(('<h4><b>'+feature.properties.ADDRESS+'</b></h4><h6><b>Address:</b> <br> '+feature.properties.stock +' thousands sqm'+ ' </h6>'+
+                            '<h6><b>A: </b>'+feature.properties.A+'</h6><h6>'+ 	' </h6>'+
+                            '<h6><b>B: </b>'+feature.properties.B+'</h6><h6>'+
+                                '<h6><b>Tenants: </b>'+ '</h6><h6>'+
+                                    "<img src="+anchors_url1+" width=40 class='img'>"+ " " +
+                                    "<img src="+anchors_url2+" width=40 class='img'>"+ " " +
+                                    "<img src="+anchors_url3+" width=40 class='img'>"+'</h6><h6>'+ 
+                            '<a href="tel:+3700000000">Call a broker: <br> +370-00-000-00-00 </a>'+'</h6><h6>'+'<a href="https://www.colliers.com/en-lt/"> Find an office:  </a></h6>'), customOptions);
+                            layer.on({
+                            mouseover: highlightFeature,
+                            //mouseout: resetHighlight,
+                            })
+                        }, 
+                    
+                        // return  color 
+                        style: function(feature) {
+                            return parseFloat(feature.properties.RENT_RATE) > 22 ? {color:'#182B62'} :
+                            parseFloat(feature.properties.RENT_RATE) > 20  ? {color:'#9F5F9F'}:
+                            parseFloat(feature.properties.RENT_RATE) > 18  ? {color:'#ED1B34'} :
+                            parseFloat(feature.properties.RENT_RATE) > 16  ? {color:'#F68B1F'} :
+                            parseFloat(feature.properties.RENT_RATE) > 14  ? {color:'#FFD400'} :
+                            parseFloat(feature.properties.RENT_RATE) > 12  ? {color:'#25408F'} :
+                            parseFloat(feature.properties.RENT_RATE) > 10  ? {color:'#339088'} :
+                            parseFloat(feature.properties.RENT_RATE) > 8   ? {color:'#0C9ED9'} : 
+                            parseFloat(feature.properties.RENT_RATE) > 1   ? {color:'#B7E4F4'} : 
+                            parseFloat(feature.properties.RENT_RATE) == 1   ? {color:'#244090', fillOpacity:0, weight:2} : 
+                            {color:'25408F' };
+                        },
+                        
+                    }).addTo(map).bringToBack();                 
+
+            // ajax geojson for working filters 
+
+                var geojson = L.geoJSON.ajax('{% static "office-Vilnius.geojson"%}', {
+                    pointToLayer: function (feature, latlng) {
+                    //pie-charts
+                        if (feature.properties.VACANCY>1) {
+                            return L.minichart(latlng, 
+                                    {data: [feature.properties.VACANCY,(feature.properties.GLA-feature.properties.VACANCY)], 
+                                    type: "pie",
+                                    fillOpacity: '0.8',
+                                    opacity:"0.8",
+                                    colors: ['#0C9ED9','#25408F'],
+                                    width: Math.sqrt(feature.properties.GLA/20)
+                                    },                                         
+                                    )
+                        }
+                    },
+                    filter:filterOfficeByVacancy,
+                    filter:filterOfficeByType, 
+                    filter: filterOfficeByRent,
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties.VACANCY == "1") {
+                        img_url = "/static/images/"+feature.properties.Img
+                        layer.bindPopup(('<h4>'+feature.properties.name+'</h4><h6><b>Address:</b><br> '+feature.properties.ADDRESS +' </h6>'+
+                        '<h6><b>Статус: </b>'+feature.properties.TYPE+'</h6><h6>'+ '<b>Vacant: </b>'+ " 0 кв. м"+  '</h6>' + 
+                        '<a href="https://collierspro.typeform.com/to/p2NaA1al">Add information </a>'+'</h6><h6>'+'<a href="https://colliersoffice.by/">Find an office: </a></h6>'), customOptions);}
+                        else {
+                            img_url = "/static/images/"+feature.properties.Img
+                            layer.bindPopup(('<h4>'+feature.properties.name+'</h4><h6><b>Address:</b> <br>'+feature.properties.ADDRESS +' </h6>'+
+                            '<h6><b>Статус: </b>'+feature.properties.TYPE+'</h6><h6>'+ '<b>Vacant: </b>'+feature.properties.VACANCY+ " кв. м"+  '</h6>' + 
+                            '<a href="https://collierspro.typeform.com/to/p2NaA1al">Add information </a>'+'</h6><h6>'+'<a href="https://colliersoffice.by/">Find an office: </a></h6>'), customOptions);
+
+                        }
+                        layer.on({
+                        mouseover: highlightFeature,
+                        mouseout: resetHighlight,
+                        })
+                    }, 
+                 
+                }).addTo(map);
+
+      
+            function highlightFeature(e) {
+                var layer = e.target;
+                info.update(layer.feature.properties);
+            }
+                  
+            function resetHighlight(e) {
+                geojson.resetStyle(e.target);
+                info.update();
+            }
+            // filters on type
+            $("input[name=fltType]").click(function(){
+                officeIDs=[];
+                geojson.refresh();
+            });
+
+            function filterOfficeByType(json) {
+                var att=json.properties;
+                var optFilter = $("input[name=fltType]:checked").val();
+                var optFilter2 = $("input[name=fltRent]:checked").val();
+                var optFilter3 = $("input[name=fltVACANCY]:checked").val();
+                   
+                   if (optFilter=='ALL' && optFilter2 == 'ALL' && optFilter3 == 'ALL' ) {
+                    return true;
+                    } else {
+                        return ((att.TYPE==optFilter)||(optFilter=='ALL'))
+                        && ((optFilter2=='ALL')||(parseFloat(att.RENT_RATE) <= parseFloat(optFilter2) 
+                        && (parseFloat(att.RENT_RATE) > (parseFloat(optFilter2)-2.0))))
+                        && ((optFilter3=='ALL')||(parseInt(att.VACANCY) > parseInt(optFilter3)));
+                          }
+            }
+
+            // filers on rent_rate
+                $("input[name=fltRent]").click(function(){
+                    officeIDs=[];
+                    geojson.refresh();
+                    });
+            
+                function filterOfficeByRent(json) {
+                    var att=json.properties;
+                    var optFilter = $("input[name=fltType]:checked").val();
+                    var optFilter2 = $("input[name=fltRent]:checked").val();
+                    var optFilter3 = $("input[name=fltVACANCY]:checked").val();
+                       
+                       if (optFilter=='ALL' && optFilter2 == 'ALL' && optFilter3 == 'ALL' ) {
+                        return true;
+                        } else {
+                            return ((att.TYPE==optFilter)||(optFilter=='ALL'))
+                            && ((optFilter2=='ALL')||(parseFloat(att.RENT_RATE) <= parseFloat(optFilter2) 
+                            && (parseFloat(att.RENT_RATE) > (parseFloat(optFilter2)-2.0))))
+                            && ((optFilter3=='ALL')||(parseInt(att.VACANCY) > parseInt(optFilter3)));
+                              }
+                        }
+        // filters on VACANCY      
+                $("input[name=fltVACANCY]").click(function(){
+                        officeIDs=[];
+                        geojson.refresh();
+                        });
+
+                function filterOfficeByVacancy(json) {
+                    var att=json.properties;
+                    var optFilter = $("input[name=fltType]:checked").val();
+                    var optFilter2 = $("input[name=fltRent]:checked").val();
+                    var optFilter3 = $("input[name=fltVACANCY]:checked").val();
+                       
+                       if (optFilter=='ALL' && optFilter2 == 'ALL' && optFilter3 == 'ALL' ) {
+                        return true;
+                        } else {
+                            return ((att.TYPE==optFilter)||(optFilter=='ALL'))
+                            && ((optFilter2=='ALL')||(parseFloat(att.RENT_RATE) <= parseFloat(optFilter2) 
+                            && (parseFloat(att.RENT_RATE) > (parseFloat(optFilter2)-2.0))))
+                            && ((optFilter3=='ALL')||(parseInt(att.VACANCY) > parseInt(optFilter3)));
+                              }
+            }
+        var popup = L.popup();
+            
+       // Плотность офисной недвижимости
+       
+            var locations = officeData.features.map(function(rat) {
+                // the heatmap plugin wants an array of each location
+                var location = rat.geometry.coordinates.reverse();
+                var radius_VACANCY = parseInt(Math.sqrt(rat.properties.GLA/100))
+                location.push(radius_VACANCY);
+                return radius_VACANCY, location; // e.g. [50.5, 30.5, 0.2], // lat, lng, intensity
+              });
+
+           var heat = L.heatLayer(locations, { minOpacity: 0.9, max: 0.45, maxZoom: 20, radius: location.radius_VACANCY, blur: 10, gradient: {0.4: '#ab809d', 0.85: '#c24e9d', 1: '#f00c9c'}, 
+         });
+                   
+           
+        // disclamer 
+
+            map.attributionControl.addAttribution('Rent Rates; <a href="https://colliersinvest.by/">Colliers</a>');
+       
+        // legend
+        var legend = L.control({position: 'bottomright', title: "Rent Rates EUR/sqm/month NNN"});
+        
+        legend.onAdd = function (map) {
+        
+                var div = L.DomUtil.create('div', 'info legend');
+                var grades = ['Vacant','Rented'];
+                var colors = ['#0C9ED9','#25408F'];
+                var labels = ['<strong> Legend </strong> <br>'];
+                        
+                for (var i = 0; i < grades.length; i++) {
+      
+                    labels.push(
+                        '<i style="background: ' + colors[i] + '"></i> ' +
+                        grades[i]+'<br>');
+                }
+        
+                div.innerHTML = labels.join('<br>');
+                return div;
+            };
+        
+        legend.addTo(map);
+        // layers    
+        var baseLayers = {
+                "OpenStreetMap": tiles,
+                };
+            
+            var overlays = {
+                "Плотность офисного стока": heat,
+                };
+            
+            L.control.layers(baseLayers, overlays).addTo(map);
+
+            function closeNav() { 
+                if (document.getElementById("sidebar").style.zoom == "0.7") {
+                    document.getElementById("sidebar").style.width = "200px"
+                    document.getElementById("sidebar").style.zoom = "1.0"
+                    document.getElementById("close").style.content = "url('/static/200601.png')"
+                    } else {
+                        document.getElementById("sidebar").style.width = "50px"
+                        document.getElementById("sidebar").style.zoom = "0.7"
+                       // document.getElementById("divFilter").style.visibility = "hidden";
+                        document.getElementById("close").style.content = "url('/static/200602.png')"
+                    }     
+            };
+
+     
+        </script>
+    </body>
+</html>
+
+
