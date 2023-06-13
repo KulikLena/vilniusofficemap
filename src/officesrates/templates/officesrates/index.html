@@ -217,11 +217,11 @@
                     
                 }).addTo(map).bringToBack();    
                 
-                var ozo = L.geoJSON.ajax('{% static "ozo.geojson"%}', {
-                    pointToLayer: function (feature, latlngs) {
-                        return L.polygon(latlngs, geojsonMarkerOptions);
-                    },                                     
-                }).addTo(map).bringToBack(); 
+               // var ozo = L.geoJSON.ajax('{% static "ozo.geojson"%}', {
+                  //  pointToLayer: function (feature, latlngs) {
+                     //   return L.polygon(latlngs, geojsonMarkerOptions);
+                 //   },                                     
+               // }).addTo(map).bringToBack(); 
                
                     // ajax geojson for working filters 
 
