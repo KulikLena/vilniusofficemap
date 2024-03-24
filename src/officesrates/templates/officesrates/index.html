@@ -76,10 +76,10 @@
                 <input type='radio' name='fltType' value='Existing'> Existing
                 </div>
             <div class="fa fa-bars">
-                <input type='radio' name='fltType' value='Pipeline'> Pipeline
+                <input type='radio' name='fltType' value='Under construction'> Under construction
             </div>
             <div class="fa fa-bars">
-                <input type='radio' name='fltType' value='Completed in 2023'> Completed in 2023 
+                <input type='radio' name='fltType' value='In planning'> In planning
             </div>
             </h6>
                 <h4> <b>Rent Rates,<p>  EUR/sqm/month </b> </h4> 
@@ -172,7 +172,7 @@
             info.update = function (props) {
                 this._div.innerHTML = '<h4> Rent Rates'+ '<br>' +'in Vilnius offices</h4>'+
                 '<br> <a href="https://www.colliers.com/en-lt/"><img src="{% static 'colliers.png' %}" width=100 ></a><br />' 
-                + (props ? '<b><br>' + props.name + '</b><br />' + props.ADDRESS +'</b><br>'+ '</b>': '' );
+                + (props ? '<b><br>' + props.NAME + '</b><br />' + props.ADDRESS +'</b><br>'+ '</b>': '' );
             };
         
             info.addTo(map);
@@ -192,30 +192,29 @@
                     'className' : 'popupCustom' }
 // cbd polygons
 
-            var cbd = L.geoJSON.ajax('{% static "cbd.geojson"%}', {
-                    pointToLayer: function (feature, latlngs) {
-                        return L.polygon(latlngs, geojsonMarkerOptions);
-                    }, 
-                    onEachFeature: function (feature, layer) {
-                        anchors_url1 = "/static/images/"+feature.properties.anchors[0];
-                        anchors_url2 = "/static/images/"+feature.properties.anchors[1];
-                        anchors_url3 = "/static/images/"+feature.properties.anchors[2];   
+           // var cbd = L.geoJSON.ajax('{% static "cbd.geojson"%}', {
+            //        pointToLayer: function (feature, latlngs) {
+             //           return L.polygon(latlngs, {color: 'red',fillOpacity: 0.2});
+              //      }, 
+             //       onEachFeature: function (feature, layer) {
+              //          anchors_url1 = "/static/images/"+feature.properties.anchors[0];
+              //          anchors_url2 = "/static/images/"+feature.properties.anchors[1];
+              //          anchors_url3 = "/static/images/"+feature.properties.anchors[2];   
                         //img_url = "/static/images/"+feature.properties.Img
-                        layer.bindPopup(('<h4><b>'+feature.properties.ADDRESS+'</b></h4><h6><b>Address:</b> <br> '+feature.properties.stock +' thousands sqm'+ ' </h6>'+
-                        '<h6><b>A: </b>'+feature.properties.A+'</h6><h6>'+ 	' </h6>'+
-                        '<h6><b>B: </b>'+feature.properties.B+'</h6><h6>'+
-                            '<h6><b>Tenants: </b>'+ '</h6><h6>'+
-                                "<img src="+anchors_url1+" width=40 class='img'>"+ " " +
-                                "<img src="+anchors_url2+" width=40 class='img'>"+ " " +
-                                "<img src="+anchors_url3+" width=40 class='img'>"+'</h6><h6>'+ 
-                        '<a href="tel:+375293768637">Call a broker: <br> +375-29-376-86-37 </a>'+'</h6><h6>'+'<a href="https://colliersoffice.by/"> Find an office </a></h6>'), customOptions);
-                        layer.on({
-                        mouseover: highlightFeature,
-                        mouseout: resetHighlight,
-                        })
-                    }, 
+               //         layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Stock:</b> <br> '+feature.properties.stock/1000 +' thousands sqm'+ ' </h6>'+
+              //          '<h6><b>Vacancy: </b>'+feature.properties.VACANCY+'</h6><h6>'
+                           // '<h6><b>Tenants: </b>'+ '</h6><h6>'+
+                           //     "<img src="+anchors_url1+" width=40 class='img'>"+ " " +
+                           //     "<img src="+anchors_url2+" width=40 class='img'>"+ " " +
+                           //     "<img src="+anchors_url3+" width=40 class='img'>"+'</h6><h6>' 
+              //          ), customOptions);
+               //         layer.on({
+                        //mouseover: highlightFeature,
+                        //mouseout: resetHighlight,
+              //          })
+             //       }, 
                     
-                }).addTo(map).bringToBack();    
+             //   }).addTo(map).bringToBack();    
                 
                // var ozo = L.geoJSON.ajax('{% static "ozo.geojson"%}', {
                   //  pointToLayer: function (feature, latlngs) {
@@ -233,9 +232,10 @@
                     filter: filterOfficeByRent,
                     onEachFeature: function (feature, layer) {
                         //img_url = "/static/images/"+feature.properties.Img
-                        layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Address:</b> <br> '+feature.properties.ADDRESS +' </h6>'+
-                        '<h6><b>Status: </b>'+feature.properties.TYPE+'</h6><h6>'+ 	
-                        '<a href="tel:+375293768637">Call a broker: <br> +375-29-376-86-37 </a>'+'</h6><h6>'+'<a href="https://colliersoffice.by/"> Find an office </a></h6>'), customOptions);
+                        layer.bindPopup(('<h4><b>'+feature.properties.NAME+'</b></h4><h6><b>Address:</b> <br> '+feature.properties.ADDRESS +' </h6>'+
+                        '<h6><b>Status: </b>'+feature.properties.TYPE+'</h6><h6>'+' </h6>'+
+                        '<h6><b>Avg. Rent Rate: </b>' +feature.properties.RENT_RATE 		
+                        ), customOptions);
                         layer.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight,
@@ -362,6 +362,10 @@
             var overlays = {
                 "Office stock": heat,
                 };
+
+            var office_clusters = {
+                    "Office clusters": cbd,
+                    };
             
             L.control.layers(baseLayers, overlays).addTo(map);
 

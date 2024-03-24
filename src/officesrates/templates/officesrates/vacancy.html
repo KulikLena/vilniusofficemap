@@ -67,9 +67,9 @@
                 <span class="leaflet-sidebar-close" > 
                     <i id ="close" class="fa fa-caret-left"  onclick="closeNav()"></i>
                 </span>
-                Фильтры
+                Filters
             </h1>
-            <h4> <b> Категория  </b> </h4> 
+            <h4> <b> Category </b> </h4> 
             <h6>
             <div class="fa fa-bars">
                 <input type='radio' name='fltType' value='ALL' checked> All
@@ -78,10 +78,10 @@
                 <input type='radio' name='fltType' value='Existing'> Existing
                 </div>
             <div class="fa fa-bars">
-                <input type='radio' name='fltType' value='Pipeline'> Pipeline
+                <input type='radio' name='fltType' value='Under construction'> Under construction
             </div>
             <div class="fa fa-bars">
-                <input type='radio' name='fltType' value='Completed in 2023'> Completed in 2023
+                <input type='radio' name='fltType' value='In planning'> In planning
             </div>
             </h6>
                 <h4> <b> Rent rates, EUR/sqm </b><br> </h4> 
@@ -154,7 +154,7 @@
     </div>
 
         <div id="map" class = "sidebar-map leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"></div>
-        <script type="text/javascript" src="{% static "office-Minsk.js"%}"></script>
+        <script type="text/javascript" src="{% static "office-Vilnius.js"%}"></script>
         <script type="text/javascript">
 
             var map = L.map('map').setView([54.678458872500464, 25.288739265832806], 12);
@@ -195,7 +195,7 @@
             info.update = function (props) {
                 this._div.innerHTML = '<h4> Rent Rates'+ '<br>' +'in Vilnius Offices</h4>'+
                 '<br> <a href="https://www.colliers.com/en-lt/"><img src="{% static 'colliers.png' %}" width=100 ></a><br />' 
-                + (props ? '<b><br>' + props.name + '</b><br />' + props.ADDRESS +'</b><br>'+ '</b>': '' );
+                + (props ? '<b><br>' + props.NAME + '</b><br />' + props.ADDRESS +'</b><br>'+ '</b>': '' );
             };
         
                     info.addTo(map);
@@ -222,8 +222,8 @@
                                 '<h6><b>Tenants: </b>'+ '</h6><h6>'+
                                     "<img src="+anchors_url1+" width=40 class='img'>"+ " " +
                                     "<img src="+anchors_url2+" width=40 class='img'>"+ " " +
-                                    "<img src="+anchors_url3+" width=40 class='img'>"+'</h6><h6>'+ 
-                            '<a href="tel:+3700000000">Call a broker: <br> +370-00-000-00-00 </a>'+'</h6><h6>'+'<a href="https://www.colliers.com/en-lt/"> Find an office:  </a></h6>'), customOptions);
+                                    "<img src="+anchors_url3+" width=40 class='img'>"+'</h6><h6>' 
+                            ));
                             layer.on({
                             mouseover: highlightFeature,
                             //mouseout: resetHighlight,
@@ -270,14 +270,14 @@
                     onEachFeature: function (feature, layer) {
                         if (feature.properties.VACANCY == "1") {
                         img_url = "/static/images/"+feature.properties.Img
-                        layer.bindPopup(('<h4>'+feature.properties.name+'</h4><h6><b>Address:</b><br> '+feature.properties.ADDRESS +' </h6>'+
-                        '<h6><b>Статус: </b>'+feature.properties.TYPE+'</h6><h6>'+ '<b>Vacant: </b>'+ " 0 кв. м"+  '</h6>' + 
+                        layer.bindPopup(('<h4>'+feature.properties.NAME+'</h4><h6><b>Address:</b><br> '+feature.properties.ADDRESS +' </h6>'+
+                        '<h6><b>Status: </b>'+feature.properties.TYPE+'</h6><h6>'+ '<b>Vacant: </b>'+ " 0 sqm"+  '</h6>' + 
                         '<a href="https://collierspro.typeform.com/to/p2NaA1al">Add information </a>'+'</h6><h6>'+'<a href="https://colliersoffice.by/">Find an office: </a></h6>'), customOptions);}
                         else {
                             img_url = "/static/images/"+feature.properties.Img
-                            layer.bindPopup(('<h4>'+feature.properties.name+'</h4><h6><b>Address:</b> <br>'+feature.properties.ADDRESS +' </h6>'+
-                            '<h6><b>Статус: </b>'+feature.properties.TYPE+'</h6><h6>'+ '<b>Vacant: </b>'+feature.properties.VACANCY+ " кв. м"+  '</h6>' + 
-                            '<a href="https://collierspro.typeform.com/to/p2NaA1al">Add information </a>'+'</h6><h6>'+'<a href="https://colliersoffice.by/">Find an office: </a></h6>'), customOptions);
+                            layer.bindPopup(('<h4>'+feature.properties.NAME+'</h4><h6><b>Address:</b> <br>'+feature.properties.ADDRESS +' </h6>'+
+                            '<h6><b>Status: </b>'+feature.properties.TYPE+'</h6><h6>'+ '<b>Vacant: </b>'+feature.properties.VACANCY+ " sqm"+  '</h6>' 
+                            ), customOptions);
 
                         }
                         layer.on({

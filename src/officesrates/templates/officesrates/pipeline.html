@@ -74,10 +74,10 @@
                 <input type='radio' name='fltType' value='Existing'> Existing
                 </div>
             <div class="fa fa-bars">
-                <input type='radio' name='fltType' value='Pipeline'> Pipeline
+                <input type='radio' name='fltType' value='Under construction'> Under construction
             </div>
             <div class="fa fa-bars">
-                <input type='radio' name='fltType' value='Completed in 2023'> Completed in 2023
+                <input type='radio' name='fltType' value='In planning'> In planning
             </div>
               <h4> <br> </h4>
             </h6>
@@ -111,11 +111,11 @@
                 attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
             }).addTo(map);
             
-            var googleHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=m@221097413,traffic&x={x}&y={y}&z={z}', {
+            var googleHybrid = L.tileLayer('https://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}&s=Ga', {
 				subdomains: '0123',
 				attribution: '&copy; Google Maps',
 				zIndex: 4
-			});
+			}).addTo(map);
         
             // control that shows state info on hover
             var info = L.control();
@@ -130,7 +130,7 @@
             info.update = function (props) {
                 this._div.innerHTML = '<h4> Rent Rates'+ '<br>' +'in Vilnius Offices</h4>'+
                 '<br> <a href="https://www.colliers.com/en-lt/"><img src="{% static 'colliers.png' %}" width=100 ></a><br />' 
-                + (props ? '<b><br>' + props.name + '</b><br />' + props.ADDRESS +'</b><br>'+ '</b>': '' );
+                + (props ? '<b><br>' + props.NAME + '</b><br />' + props.ADDRESS +'</b><br>'+ '</b>': '' );
             };
         
             info.addTo(map);
@@ -160,14 +160,9 @@
         anchors_url2 = "/static/images/"+feature.properties.anchors[1];
         anchors_url3 = "/static/images/"+feature.properties.anchors[2];   
         //img_url = "/static/images/"+feature.properties.Img
-        layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Office stock:</b> <br> '+feature.properties.stock +' thousands sqm'+ ' </h6>'+
-        '<h6><b>A: </b>'+feature.properties.A+'</h6><h6>'+ 	' </h6>'+
-        '<h6><b>B: </b>'+feature.properties.B+'</h6><h6>'+
-            '<h6><b>Tenants: </b>'+ '</h6><h6>'+
-                "<img src="+anchors_url1+" width=40 class='img'>"+ " " +
-                "<img src="+anchors_url2+" width=40 class='img'>"+ " " +
-                "<img src="+anchors_url3+" width=40 class='img'>"+'</h6><h6>'+ 
-        '<a href="tel:+375293768637">Call a broker: <br> +375-29-376-86-37 </a>'+'</h6><h6>'+'<a href="https://colliersoffice.by/"> Find an office </a></h6>'), customOptions);
+        layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Stock:</b> <br> '+feature.properties.stock/1000 +' thousands sqm'+ ' </h6>'+
+                        '<h6><b>Vacancy: </b>'+feature.properties.VACANCY+'</h6><h6>'
+        ), customOptions);
         layer.on({
         mouseover: highlightFeature,
         //mouseout: resetHighlight,
@@ -200,9 +195,9 @@
                     filter:filterOfficeByType, 
                     onEachFeature: function (feature, layer) {
                         //img_url = "/static/images/"+feature.properties.Img
-                        layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Address:</b> <br> '+feature.properties.ADDRESS +' </h6>'+
-                        '<h6><b>Status: </b>'+feature.properties.TYPE+'</h6><h6>'+ 	
-                        '<a href="tel:+370000000">Call a broker: <br> +370-00-000-00-00 </a>'+'</h6><h6>'+'<a href="https://www.colliers.com/en-lt"> Find an office </a></h6>'), customOptions);
+                        layer.bindPopup(('<h4><b>'+feature.properties.NAME+'</b></h4><h6><b>Address:</b> <br> '+feature.properties.ADDRESS +' </h6>'+
+                        '<h6><b>Status: </b>'+feature.properties.TYPE+'</h6><h6>'	
+                        ), customOptions);
                         layer.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight,
@@ -213,8 +208,8 @@
                     style: function(feature) {
                         var radius_gla = parseInt(Math.sqrt(feature.properties.GLA/200));
                         return feature.properties.TYPE == 'Existing' ? {color:'#25408F', radius: radius_gla} :
-                                feature.properties.TYPE == 'Pipeline' ? {color:'#0C9ED9', radius: radius_gla}:
-                                feature.properties.TYPE == 'Completed in 2023' ? {color:'#ED1B34', radius: radius_gla} :
+                                feature.properties.TYPE == 'Under construction' ? {color:'#ED1B34', radius: radius_gla}:
+                                feature.properties.TYPE == 'In planning' ? {color:'#0C9ED9', radius: radius_gla} :
                                 {color:'#FFD400', radius: radius_gla};
                     },
                     
@@ -273,8 +268,8 @@
         legend.onAdd = function (map) {
         
                 var div = L.DomUtil.create('div', 'info legend');
-                var grades = ['Existing','Pipeline', 'Completed in 2023'];
-                var colors = ['#25408F','#0C9ED9','#ED1B34'];
+                var grades = ['Existing','Under construsction', 'Planned'];
+                var colors = ['#25408F','#ED1B34','#0C9ED9'];
                 var labels = ['<strong> Legend </strong> <br>'];
                         
                 for (var i = 0; i < grades.length; i++) {
