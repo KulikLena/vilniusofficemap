@@ -63,7 +63,7 @@
                 <span class="leaflet-sidebar-close" > 
                     <i id ="close" class="fa fa-caret-left"  onclick="closeNav()"></i>
                 </span>
-                Фильтры
+                Filters
             </h1>
             <h4> <b> Types </b> </h4> 
             <h6>
@@ -160,7 +160,7 @@
         anchors_url2 = "/static/images/"+feature.properties.anchors[1];
         anchors_url3 = "/static/images/"+feature.properties.anchors[2];   
         //img_url = "/static/images/"+feature.properties.Img
-        layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Stock:</b> <br> '+feature.properties.stock/1000 +' thousands sqm'+ ' </h6>'+
+        layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Stock:</b> <br> '+Math.round(feature.properties.stock/1000) +' thousands sqm'+ ' </h6>'+
                         '<h6><b>Vacancy: </b>'+feature.properties.VACANCY+'</h6><h6>'
         ), customOptions);
         layer.on({
