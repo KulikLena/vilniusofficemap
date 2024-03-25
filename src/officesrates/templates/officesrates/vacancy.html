@@ -216,14 +216,10 @@
                             anchors_url2 = "/static/images/"+feature.properties.anchors[1];
                             anchors_url3 = "/static/images/"+feature.properties.anchors[2];   
                             //img_url = "/static/images/"+feature.properties.Img
-                            layer.bindPopup(('<h4><b>'+feature.properties.ADDRESS+'</b></h4><h6><b>Address:</b> <br> '+feature.properties.stock +' thousands sqm'+ ' </h6>'+
-                            '<h6><b>A: </b>'+feature.properties.A+'</h6><h6>'+ 	' </h6>'+
-                            '<h6><b>B: </b>'+feature.properties.B+'</h6><h6>'+
-                                '<h6><b>Tenants: </b>'+ '</h6><h6>'+
-                                    "<img src="+anchors_url1+" width=40 class='img'>"+ " " +
-                                    "<img src="+anchors_url2+" width=40 class='img'>"+ " " +
-                                    "<img src="+anchors_url3+" width=40 class='img'>"+'</h6><h6>' 
-                            ));
+                            layer.bindPopup(('<h4><b>'+feature.properties.name+'</b></h4><h6><b>Stock:</b> <br> '+Math.round(feature.properties.stock/1000) +' thousands sqm'+ ' </h6>'+
+                            '<h6><b>Avg. Rent Rate: </b>'+feature.properties.RENT_RATES+'</h6><h6>'+
+                                            '<h6><b>Vacancy: </b>'+feature.properties.VACANCY+'</h6><h6>'
+                            ), customOptions);
                             layer.on({
                             mouseover: highlightFeature,
                             //mouseout: resetHighlight,
@@ -232,7 +228,7 @@
                     
                         // return  color 
                         style: function(feature) {
-                            return parseFloat(feature.properties.RENT_RATE) > 22 ? {color:'#182B62'} :
+                            return parseFloat(feature.properties.RENT_RATES) > 22 ? {color:'#182B62'} :
                             parseFloat(feature.properties.RENT_RATE) > 20  ? {color:'#9F5F9F'}:
                             parseFloat(feature.properties.RENT_RATE) > 18  ? {color:'#ED1B34'} :
                             parseFloat(feature.properties.RENT_RATE) > 16  ? {color:'#F68B1F'} :
