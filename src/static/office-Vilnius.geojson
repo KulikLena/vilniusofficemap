@@ -2052,7 +2052,7 @@
    "GLA":8455,
    "RR_MIN":13,
    "RR_MAX":13.5,
-   "RENT_RATE":13.5,
+   "RENT_RATE":12.5,
    "VACANCY":1500,
    "TYPE":"Existing",
    "CLASS":"B1",
