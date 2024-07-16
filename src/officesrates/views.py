@@ -50,3 +50,7 @@ class OfficeList(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         return context
+    
+def gravity(request):
+    template_name='gravityretail/gravity.html' 
+    return render(request, template_name, {})    
